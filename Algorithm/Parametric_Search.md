@@ -1,0 +1,17 @@
+- 최적화 문제(문제의 상황을 만족하는 특정 변수의 최솟값, 최댓값을 구하는 문제)를 결정 문제(decision problem)로 바꾸어 푸는 것이다.
+- 예를 들어 범위 내에서 조건을 만족하는 가장 큰 값을 찾으라는 최적화 문제라면 이분 탐색으로 결정 문제를 해결하면서 범위를 좁혀갈 수 있다.
+
+```py
+int left = sum/k;
+int right = sum;
+while(left+1 < right) {
+	int mid = (left+right)/2;
+	cost = new int[size][2];
+	traversal(root, mid);
+	if(cost[root][0] <= k) {
+		right = mid;
+	}else {
+		left = mid;
+	}
+}
+```
