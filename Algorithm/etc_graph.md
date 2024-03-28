@@ -94,3 +94,56 @@ print('부모 테이블: ', end='')
 for i in range(1, v+1):
 	print(parent[i], end=' ')
 ```
+# 최소신장 트리(크루스칼 알고리즘)
+### 신장트리
+- 그래프에서 모든 노드를 포함하면서 사이클이 존재하지 않는 부분 그래프를 의미합니다
+- 모든 노드가 포함된다는 것은 트리의 조건이기도 합니다.
+### 최소신장트리
+- 최소한의 비용으로 구성되는 신장트리를 찾아야 할때
+- 예를들어 N개의 도시가 존재하는 상황에서 두 도시사이에 도로를 놓아 전체 도시가 서로 연결 될 수 있게 도로를 설치하는 경우 ( 두도시 a,b를 선택했을때, a에서 b로 가는 경로가 반드시 존재하도록 도로를 설치해야함)
+- 1,2,3노드가 잇을때, 1,2와 2,3을 연결하면 1,3을 연결하지 않아도 모든노드가 연결되어있다.
+### 크루스칼 알고리즘
+1. 간선데이터를 비용에 따라 오름차순 정렬한다. (비용이 적은 간선부터 확인)
+2. 간선을 하나씩 확인하며 현재의 간선이 사이클을 발생시키는지 확인한다.
+3. 사이클이 발생하지 않는경우, 최소신장트리에 포함시킨다. (By Union-Find)
+4. 사이클이 발생하는경우, 최소신장 트리에 포함시키지 않는다. 
+5. 모든 간선에 대하여 2번과정을 반복한다.
+```py
+def find_parent(parent, x):
+    if parent[x] != x:
+        parent[x] = find_parent(parent, parent[x])
+    return parent[x]
+
+def union_parent(parent, a, b):
+    a = find_parent(parent,a)
+    b = find_parent(parent,b)
+    if a<b:
+        parent[b] = a
+    else:
+        parent[a] = b
+
+v,e = map(int, input().split())
+parent = [0] * (v+1)
+
+#간선을 담을 리스트, 최종비용을 담을 변수
+edges = []
+result = 0
+
+for i in range(1, v+1):
+    parent[i] = i
+
+for _ in range(e):
+    a,b,cost = map(int, input().split())
+    edges.append((cost,a,b))
+
+edges.sort()
+
+for edge in edges:
+    cost, a, b = edge
+    # a,b노드의 루트가 다른경우 = 서로다른 집합인경우 = 사이클이 없다
+    if find_parent(parent,a) != find_parent(parent,b):
+        union_parent(parent,a,b)
+        result += cost
+
+print(result)
+```
